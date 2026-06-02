@@ -48,7 +48,7 @@ Or just describe a math problem — the skill is auto-detected when relevant.
 - **No boilerplate** — skips filler phrases like "let's analyze this" or "in summary"
 - **Verifies preconditions** — checks L'Hôpital conditions (0/0 or ∞/∞) before applying, etc.
 - **Surgical output** — never writes more than the mode calls for
-- **Image support** — transcribes problem text from images; flags ambiguous symbols explicitly
+- **Image transcription + confirmation** — extracts problem text from images, flags ambiguous symbols, then restates the full problem for user confirmation before solving (prevents OCR errors from producing wrong answers)
 - **Exam-optimized** — defaults to the most common exam method; mentions alternatives briefly
 
 ### Example
@@ -61,6 +61,26 @@ Or just describe a math problem — the skill is auto-detected when relevant.
 sin x - x = -x³/6 + O(x⁵)
 lim = lim (-x³/6 + O(x⁵)) / x³ = -1/6
 答: -1/6
+```
+
+### Image Confirmation Example / 图片确认示例
+
+User uploads a photo. The skill transcribes, then restates for confirmation **before solving**:
+
+```
+题目转写：
+设函数 f(x) = x³ - 3x + 1，求 f(x) 在区间 [-2, 2] 上的最大值和最小值。
+请确认题目是否正确，确认后我开始解题。
+```
+
+User confirms → then the solution proceeds:
+
+```
+解：
+f'(x) = 3x² - 3 = 3(x-1)(x+1)，驻点 x = 1, x = -1
+计算端点与驻点：f(-2) = -1, f(-1) = 3, f(1) = -1, f(2) = 3
+最大值 3，最小值 -1
+答：最大值 3，最小值 -1
 ```
 
 ### License
@@ -100,7 +120,7 @@ git clone https://github.com/qyh2007/claude-skill-math-solver.git \
 - **无废话** — 不说"我们来分析""综上所述"等过渡句
 - **检查前提条件** — 洛必达前验证 0/0 或 ∞/∞，引定理先验条件
 - **输出克制** — 默认极简，追问才展开
-- **图片转写** — 从图片提取题目，模糊处标 `[不确定: ...]`
+- **图片转写+确认** — 从图片提取题目，模糊处标注，然后复述完整题目请用户确认后再解题（防止 OCR 偏差导致答非所问）
 - **考试导向** — 默认给最常用的考试方法，可简短提替代思路
 
 ### 示例
@@ -113,6 +133,26 @@ git clone https://github.com/qyh2007/claude-skill-math-solver.git \
 sin x - x = -x³/6 + O(x⁵)
 lim = lim (-x³/6 + O(x⁵)) / x³ = -1/6
 答: -1/6
+```
+
+### 图片确认示例
+
+用户上传题目照片，技能转写后先复述确认，再开始解题：
+
+```
+题目转写：
+设函数 f(x) = x³ - 3x + 1，求 f(x) 在区间 [-2, 2] 上的最大值和最小值。
+请确认题目是否正确，确认后我开始解题。
+```
+
+用户确认"正确" → 然后解题：
+
+```
+解：
+f'(x) = 3x² - 3 = 3(x-1)(x+1)，驻点 x = 1, x = -1
+计算端点与驻点：f(-2) = -1, f(-1) = 3, f(1) = -1, f(2) = 3
+最大值 3，最小值 -1
+答：最大值 3，最小值 -1
 ```
 
 ### 许可证
