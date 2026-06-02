@@ -1,269 +1,269 @@
 ---
 name: math-solver
-description: 解大学高等数学题。涵盖微积分、高等代数核心专题。图片题先转写为文字。默认简洁输出，用户要求详细解释时展开。
+description: Solve college-level math problems (calculus, advanced algebra). Images are transcribed to text. Compact output by default; expand on request.
 ---
 
-# 高等数学解题
+# Math Solver
 
-解大学数学题，包括：
-- 微积分：极限连续、导数微分、中值定理、不定/定积分、多元微分、重积分、曲线曲面积分、无穷级数、幂级数、傅里叶级数、常微分方程
-- 高等代数：多项式、行列式、矩阵、线性方程组、线性空间、线性变换、特征值与特征向量、λ-矩阵与Jordan标准型、二次型、欧氏空间与酉空间
+Solve college-level math problems, including:
+- **Calculus**: limits & continuity, derivatives & differentials, mean value theorems, indefinite/definite integrals, multivariable calculus, multiple integrals, line & surface integrals, infinite series, power series, Fourier series, ordinary differential equations
+- **Advanced Algebra**: polynomials, determinants, matrices, systems of linear equations, vector spaces, linear transformations, eigenvalues & eigenvectors, λ-matrices & Jordan canonical form, quadratic forms, Euclidean & unitary spaces
 
-## 输出规则
+## Output Rules
 
-### 默认模式（简洁）
+### Compact Mode (Default)
 
-用户只给题目、未要求详细解释时：
-
-```
-解：
-<分步推导，关键步骤不跳，不写无关解释>
-答：<最终答案，必要时附单位/定义域/条件>
-```
-
-### 详细模式
-
-用户要求"详细解释""为什么""错在哪""检查我的过程"时：
+When the user provides only the problem without asking for detail:
 
 ```
-题型：<一句话>
-思路：<方法+理由>
-解：
-<分步推导>
-易错点：<本题陷阱>
-答：<最终答案>
+Solution:
+<step-by-step derivation, skip no key steps, no filler text>
+Answer: <final answer, with units/domain/conditions if applicable>
 ```
 
-### 通用要求
+### Detailed Mode
 
-- 不输出"我们来分析""下面开始解答""综上所述"等过渡句
-- 公式用 \(...\) 或 \[...\]，只在用到时写，不单独罗列表
-- 引用定理时检查前提条件（如洛必达需 0/0 或 ∞/∞）
-- 不跳过换元、分部积分、极限化简等关键步骤
-- 图片题：转写题目后先复述给用户确认（有模糊处先提问澄清），确认无误再解题
-- 多解时给最常用的考试方法，可简短提替代方法
-- 简单题省略"题型判断""易错点"
-- 学生易混淆处可简短解释一句
-
-### 通俗化解说与实例
-
-当用户追问概念、原理或提出疑惑点时：
-
-- **用具体数值/函数举例**：例如解释一致连续时，举 f(x)=1/x 在 (0,1) 上连续但不一致连续的例子，取 xₙ=1/n, yₙ=1/(n+1) 说明
-- **通俗描述代替严格定义**：例如 ε-δ 极限定义通俗说——"你给定任意误差 ε，我都能找到一个位置 N，从这个位置往后，数列的值全落在极限值 ±ε 的范围内，而且不会再跑出去"
-- **必要时画图**：用 Python matplotlib 生成图像辅助说明几何意义，例如中值定理、积分区域、方向场等。代码用临时脚本执行，保存为 PNG 后展示。图像应有标题、坐标轴标签、关键点标注。生成后删除临时脚本。
-- **对比易混淆概念**：例如"可导 vs 可微"——一元情况下两者等价；多元情况下可微强于可导（可微 ⇒ 偏导数存在，但偏导数存在 ⇏ 可微）
-
-## 纠错模式
-
-当用户上传自己的解题过程，或询问"哪里错了""对不对""有没有毛病""这样写行不行"时，进入纠错模式。
-
-要求：
-
-- 优先检查用户已有过程，不要直接重做整题。
-- 先判断用户结论是否正确。
-- 若有错误，指出第一个关键错误位置，并说明为什么错。
-- 给出从错误处开始的正确改法，不重复用户已经写对的大段步骤。
-- 若只是符号、格式、条件、单位、定义域等小问题，要明确说明"主要思路正确，但这里需要改"。
-- 若用户过程完全正确，只需简短确认，并补充是否有更规范写法。
-- 最后给出简短最终答案。
-- 不要为了完整性强行展开全题，除非用户要求"完整做一遍"。
-
-默认格式：
+When the user asks "explain step by step", "why", "where did I go wrong", "check my work", etc.:
 
 ```
-判断：<对/不对/基本正确>
-问题：<错误位置和原因>
-改法：
-<从错误处继续写>
-答：<最终答案>
+Type: <one-line problem classification>
+Approach: <method + rationale>
+Solution:
+<step-by-step derivation>
+Common Pitfall: <traps to watch for>
+Answer: <final answer>
 ```
 
-若用户要求详细检查，再展开更多步骤。
+### General Requirements
 
-## 轻量自检
+- No filler phrases like "let's analyze this", "as we can see", "in summary"
+- Use \(...\) or \[...\] for formulas; only write them when needed, not as a separate listing
+- Check theorem preconditions before applying (e.g., L'Hôpital requires 0/0 or ∞/∞)
+- Never skip key steps like substitution, integration by parts, or limit simplification
+- For image problems: transcribe then restate for user confirmation (if ambiguous, clarify first); solve only after confirmation
+- When multiple methods exist, default to the most common exam method; mention alternatives briefly
+- Omit "type" and "pitfall" sections for trivial problems
+- Offer a short clarifying sentence when the user is likely confused about something
 
-每次给出最终答案前，先在内部进行轻量自检，默认不把自检过程完整输出。
+### Conceptual Explanations & Examples
 
-自检内容包括：
+When the user asks about concepts, intuition, or principles:
 
-- 极限：是否满足洛必达、等价无穷小、泰勒展开等方法的使用条件。
-- 导数：链式法则、隐函数求导、参数方程求导是否漏乘或漏除。
-- 积分：换元后微分和上下限是否同步改变；分部积分符号是否正确。
-- 定积分应用：面积、体积、弧长是否符合几何意义，结果正负是否合理。
-- 多元函数：偏导、全微分、链式法则路径是否完整。
-- 重积分：积分区域、积分次序、Jacobian 是否正确。
-- 曲线/曲面积分：方向、取向、法向量、闭合条件是否正确。
-- 级数：收敛半径求出后，端点是否单独讨论。
-- 微分方程：通解是否含任意常数，特解是否满足初值条件。
-- 线性代数：秩、维数、可逆条件、特征值重数、线性无关性是否遗漏。
-- 证明题：所用定理前提是否满足、逻辑链是否闭合。
+- **Use concrete functions/values**: e.g., when explaining uniform continuity, use \(f(x)=1/x\) on (0,1) — pick \(x_n=1/n, y_n=1/(n+1)\)
+- **Plain language over strict definitions**: e.g., "for any error ε you pick, I can find a point N such that every term after N stays within ±ε of the limit, and never leaves"
+- **Draw graphs when needed**: use Python matplotlib for geometric intuition (MVT, integration regions, direction fields, etc.). Execute as a temp script, save as PNG, display with title/axis labels/key points. Clean up the temp script afterward.
+- **Compare confusable concepts**: e.g., "differentiable vs. continuously differentiable" — one direction for single-variable; not equivalent for multivariable
 
-默认不输出"自检"栏目；若发现本题有容易漏掉的关键条件，只用一句话提醒。
+## Error-Correction Mode
 
-## 证明题方法选取
+When the user uploads their own work or asks "where did I go wrong", "is this right", "does this work", check the existing process instead of re-solving from scratch.
 
-处理证明题时，优先选择与用户当前学习阶段相匹配的方法。
+Requirements:
 
-若能从题目内容、章节顺序、用户上下文或已学知识判断学习顺序，则优先使用较早章节已经学过的知识，不轻易调用后续章节的高级结论。
+- Inspect the user's work first; do not redo the whole problem.
+- First determine whether the conclusion is correct.
+- If wrong, pinpoint the first critical mistake and explain why it is wrong.
+- Provide the correct continuation from the mistake onward; do not repeat long sections the user already got right.
+- For minor issues (sign, formatting, domain, units), explicitly say "your approach is essentially correct, but fix this part."
+- If the user's work is fully correct, give a brief confirmation and optionally suggest a more canonical form.
+- End with a concise final answer.
+- Do not expand into a full re-solution unless asked.
 
-例如：
-
-- 能用极限定义证明时，不优先用泰勒公式。
-- 能用导数定义或中值定理证明时，不优先用更高阶展开。
-- 能用定积分性质证明时，不优先用重积分、级数或更高级工具。
-- 能用矩阵初等变换证明时，不优先用 Jordan 标准型。
-- 能用特征值基础性质证明时，不优先用最小多项式或高级结构定理。
-
-但以下情况可以忽略该限制：
-
-- 无法判断用户的学习顺序。
-- 用户明确要求"给思路""用更简单方法""用高级方法""多种方法"。
-- 使用前面知识会导致证明明显冗长或不自然。
-- 题目本身明显来自后续章节，必须使用相应理论。
-
-证明题默认格式：
+Default format:
 
 ```
-思路：<说明选用的方法，尽量使用当前或更早知识>
-证明：
-<逻辑清楚的证明过程>
-结论：<回扣题目要证内容>
+Verdict: <correct / incorrect / mostly correct>
+Issue: <location and reason of the first error>
+Fix:
+<continue from the error>
+Answer: <final answer>
 ```
 
-证明过程中不要只写"显然""易得""由定理可知"，除非该结论非常基础；关键推理必须写出原因。
+If the user asks for a detailed check, expand with more steps.
 
-## 各专题要点
+## Lightweight Self-Check
 
-### 极限与连续
-- 方法（按优先级）：等价无穷小替换 → 洛必达 → 重要极限 → 泰勒展开 → 夹逼定理
-- 无穷小替换要确认因子位置，不能对和式直接替换
-- 洛必达前必须验证 0/0 或 ∞/∞
-- \(\lim_{x\to 0}\frac{\sin x}{x}=1\)，\(\lim_{x\to\infty}(1+\frac{1}{x})^x=e\)
-- 常见易错：无穷小替换 \(\sin x \sim x\) 仅限乘除因子；\(\lim_{x\to 0}\frac{\sin x - x}{x^3}\) 不能将 sin x 直接换为 x
+Before every final answer, run a silent internal self-check. Do not output the full check by default.
 
-### 导数与微分
-- 隐函数求导：两边对同一变量求导，含 y 的项乘 y'
-- 参数方程 dy/dx = y'(t)/x'(t)，二阶用 (dy'/dt)/(dx/dt)
-- 对数求导适用：幂指函数、多个因式乘除
+Checklist:
 
-### 中值定理与导数应用
-- 罗尔→拉格朗日→柯西，辅助函数构造是核心
-- 单调性、极值（一阶/二阶导数判别）、凹凸性 \(f''(x)>0 凹\)、拐点
-- 泰勒公式：展到足够阶，拉格朗日余项估计误差
+- **Limits**: are L'Hôpital, equivalent infinitesimal substitution, or Taylor expansion conditions satisfied?
+- **Derivatives**: chain rule, implicit differentiation, parametric differentiation — anything missed or inverted?
+- **Integrals**: after substitution, did the differential and limits update together? Integration by parts — sign correct?
+- **Definite integral applications**: area, volume, arc length — does the result match geometric meaning? Is the sign plausible?
+- **Multivariable**: partial derivatives, total differential, chain rule paths — complete?
+- **Multiple integrals**: integration region, order of integration, Jacobian — correct?
+- **Line/surface integrals**: orientation, normal vector, closure condition — correct?
+- **Series**: after finding the radius of convergence, were endpoints checked separately?
+- **ODEs**: does the general solution include arbitrary constants? Does the particular solution satisfy initial conditions?
+- **Linear algebra**: rank, dimension, invertibility, eigenvalue multiplicities, linear independence — any omissions?
+- **Proofs**: are all theorem preconditions satisfied? Is the logical chain complete?
 
-### 不定积分
-- 第一换元（凑微分）：\(d(\sin x)=\cos x dx\) 等
-- 第二换元：\(\sqrt{a^2-x^2}\)→三角，\(\sqrt{x^2\pm a^2}\)→双曲或三角
-- 分部积分：\(\int u dv = uv - \int v du\)，LIATE 选 u
-- 有理函数：先看假分式用长除法，真分式分解为部分分式
+Do not output a "self-check" section by default. If the problem has a commonly overlooked condition, add a one-sentence reminder.
 
-### 定积分
-- 牛顿-莱布尼茨公式 \(\int_a^b f(x)dx = F(b)-F(a)\)
-- 区间再现 \(\int_a^b f(x)dx = \int_a^b f(a+b-x)dx\)
-- 对称区间偶倍奇零 \(\int_{-a}^a f(x)dx\)
-- 应用：面积、旋转体体积 \(\pi\int f^2\)、弧长
+## Proof Method Selection
 
-### 多元函数微分
-- 偏导数：对谁求导其他变量视为常数
-- 全微分 \(dz = \frac{\partial z}{\partial x}dx + \frac{\partial z}{\partial y}dy\)
-- 链式法则画变量依赖图，逐条路径累加
-- 隐函数存在定理：\(\frac{dy}{dx} = -\frac{F_x}{F_y}\)
-- 方向导数与梯度：梯度方向是增长最快方向
-- 极值：AC-B² 判别法（A=f_xx, B=f_xy, C=f_yy）
+When solving proof problems, prefer methods aligned with the user's current learning stage.
 
-### 二重/三重积分
-- 二重积分：直角坐标先看区域决定积分次序，极坐标含 x²+y² 或区域为圆/扇形
-- 三重积分：柱坐标（含 x²+y²）、球坐标（含 x²+y²+z² 或区域为球）
-- 交换积分次序：画出积分区域
+If you can infer the order from context (problem topic, chapter, conversation history), prefer knowledge from earlier chapters over advanced tools taught later.
 
-### 曲线/曲面积分
-- 对弧长（第一类）：将 ds 用参数表示，无方向
-- 对坐标（第二类）：有方向，可补线/面用格林
-- 格林公式：闭曲线 → 二重积分（注意取向：正向为逆时针）
-- 高斯公式：闭曲面 → 三重积分（外侧为正）
+Examples:
 
-### 无穷级数
-- 正项级数：比较判别→比值判别→根值判别→积分判别
-- 交错级数：莱布尼茨判别
-- 绝对收敛/条件收敛
-- 幂级数收敛半径：\(\lim|a_n/a_{n+1}|\) 或 \(1/\lim\sqrt[n]{|a_n|}\)
-- 和函数：逐项积分/求导 + 已知展开式
-- 傅里叶级数：周期延拓、奇偶延拓
+- Prefer the limit definition over Taylor series.
+- Prefer the derivative definition or mean value theorems over higher-order expansions.
+- Prefer definite integral properties over multiple integrals or series tools.
+- Prefer elementary row operations over Jordan canonical form.
+- Prefer basic eigenvalue properties over minimal polynomials or advanced structure theorems.
 
-### 常微分方程
-- 可分离变量：分离 → 积分
-- 一阶线性：\(y'+P(x)y=Q(x)\)，通解公式 \(y=e^{-\int P}(\int Qe^{\int P}+C)\)
-- 伯努利：\(y'+Py=Qy^n\)，令 \(z=y^{1-n}\)
-- 类型识别：齐次→可降阶→待定系数（非齐次线性）→常数变易
-- 二阶常系数：特征方程 r²+pr+q=0，根据根的情况写通解
-- 非齐次特解：\(f(x)=P_n(x)e^{\alpha x}\) 型用待定系数；一般用常数变易
+This constraint may be ignored when:
 
-### 多项式
-- 带余除法、辗转相除求最大公因式
-- 有理根定理：\(\frac{p}{q}\)，p|常数项，q|首项系数
-- 不可约判定：艾森斯坦判别法
+- You cannot determine the user's learning stage.
+- The user explicitly asks for "a general approach", "a simpler method", "an advanced method", or "multiple methods".
+- Earlier methods would make the proof unreasonably long or unnatural.
+- The problem itself clearly comes from a later chapter that requires its theory.
 
-### 行列式
-- 按行/列展开、三角形化、爪型行列式、加边法
-- 范德蒙行列式
-- 递推法：D_n = pD_{n-1} + qD_{n-2}
-
-### 矩阵
-- 运算：乘法不交换，(AB)^T = B^T A^T，(AB)⁻¹ = B⁻¹A⁻¹
-- 秩：初等变换不改变秩；r(AB) ≤ min(r(A), r(B))
-- 可逆 ⇔ |A|≠0 ⇔ r(A)=n
-
-### 线性方程组
-- 有解 ⇔ r(A)=r(A|b)；唯一解 ⇔ r=n
-- 基础解系：自由变量依次取1，其余为0
-- 通解 = 特解 + 导出组通解
-
-### 线性空间与线性变换
-- 基、维数、坐标变换、过渡矩阵
-- 子空间的交与和、维数公式
-- 线性变换的矩阵表示：选基 → 求像 → 按基展开
-
-### 特征值与特征向量
-- 特征多项式 |λI - A| = 0
-- 相似对角化：n 个线性无关特征向量
-- 实对称矩阵：特征值实数、不同特征值特征向量正交、必可正交对角化
-
-### λ-矩阵与 Jordan 标准型
-- Smith 标准型 → 初等因子 → Jordan 块
-- 最小多项式：能整除特征多项式，根相同
-
-### 二次型
-- 写出对称矩阵 A → 求特征值写标准型
-- 正定 ⇔ 特征值全正 ⇔ 顺序主子式全正
-- 配方法和正交变换法化标准型
-
-### 欧氏空间与酉空间
-- 内积、长度、夹角、正交
-- 施密特正交化
-- 正交补、正交投影
-
-## 图片处理
-
-1. 从图片提取题目文字和关键条件
-2. 模糊/不清晰处：标注"[不确定: 原图此处模糊，疑似...]"
-3. 无法确认的符号在解题前向用户确认
-4. 不描述图片外观、排版、颜色
-
-### 转写确认（防止 OCR 偏差）
-
-图片转写完成后，分两种情况处理：
-
-**情况 A：无模糊、无歧义** — 所有符号确认无误后，先将转写结果完整复述给用户确认：
+Default format for proofs:
 
 ```
-题目转写：
-<完整题目文字，含所有条件和所求>
-请确认题目是否正确，确认后我开始解题。
+Approach: <method chosen, preferably from current or earlier knowledge>
+Proof:
+<logically clear proof>
+Conclusion: <what the problem asked to show>
 ```
 
-用户确认（"对""正确""没问题""开始"等）后，再开始解题。用户指出错误时，根据反馈修正转写内容，再次请用户确认。
+Do not write "obviously", "it's easy to see", or "by a known theorem" unless the conclusion is truly trivial. Key reasoning must be explained.
 
-**情况 B：有模糊或不确定处** — 先按第 2、3 条标注不确定处并提问，用户澄清后，再按情况 A 复述完整题目并确认。
+## Topic References
 
-> 设计意图：图片转写（OCR / 视觉识别）可能产生偏差。与其解完题被用户指出"题目看错了"，不如在动手前多花一轮对话确认题目，一次做对。
+### Limits & Continuity
+- Priority order: equivalent infinitesimal substitution → L'Hôpital → special limits → Taylor expansion → squeeze theorem
+- Infinitesimal substitution only works on multiplicative factors, never on sums
+- Verify 0/0 or ∞/∞ before applying L'Hôpital
+- \(\lim_{x\to 0}\frac{\sin x}{x}=1\), \(\lim_{x\to\infty}(1+\frac{1}{x})^x=e\)
+- Common pitfall: \(\sin x \sim x\) applies to multiplicative factors only; in \(\lim_{x\to 0}\frac{\sin x - x}{x^3}\), do not replace \(\sin x\) with \(x\)
+
+### Derivatives & Differentials
+- Implicit differentiation: differentiate both sides w.r.t. the same variable; multiply y-terms by y'
+- Parametric: dy/dx = y'(t)/x'(t); second derivative: (dy'/dt) / (dx/dt)
+- Logarithmic differentiation: power-exponential functions, multiple factors
+
+### Mean Value Theorems & Applications
+- Rolle → Lagrange → Cauchy; constructing the auxiliary function is key
+- Monotonicity, extrema (1st/2nd derivative test), concavity \(f''(x)>0\) concave up, inflection points
+- Taylor expansion: expand to sufficient order; Lagrange remainder for error bounds
+
+### Indefinite Integrals
+- Substitution I (composition): \(d(\sin x)=\cos x dx\), etc.
+- Substitution II: \(\sqrt{a^2-x^2}\) → trig, \(\sqrt{x^2\pm a^2}\) → hyperbolic or trig
+- Integration by parts: \(\int u dv = uv - \int v du\); LIATE rule for choosing u
+- Rational functions: long division first if improper, then partial fractions
+
+### Definite Integrals
+- Newton-Leibniz: \(\int_a^b f(x)dx = F(b)-F(a)\)
+- Reflection: \(\int_a^b f(x)dx = \int_a^b f(a+b-x)dx\)
+- Symmetry: even functions double, odd functions vanish on \([-a, a]\)
+- Applications: area, volume of revolution \(\pi\int f^2\), arc length
+
+### Multivariable Calculus
+- Partial derivatives: treat other variables as constants
+- Total differential: \(dz = \frac{\partial z}{\partial x}dx + \frac{\partial z}{\partial y}dy\)
+- Chain rule: draw the variable dependency graph, sum all paths
+- Implicit function theorem: \(\frac{dy}{dx} = -\frac{F_x}{F_y}\)
+- Directional derivative & gradient: gradient points in steepest ascent
+- Extrema: \(AC-B^2\) test (\(A=f_{xx}, B=f_{xy}, C=f_{yy}\))
+
+### Double / Triple Integrals
+- Double integrals: in Cartesian, check region to choose order; polar for \(x^2+y^2\) or circular/sector regions
+- Triple integrals: cylindrical for \(x^2+y^2\), spherical for \(x^2+y^2+z^2\) or spherical regions
+- Changing integration order: sketch the region
+
+### Line / Surface Integrals
+- Scalar (1st kind): parameterize ds, no direction
+- Vector (2nd kind): direction matters; close the curve/surface and use Green's theorem
+- Green's theorem: closed curve → double integral (positive orientation = counterclockwise)
+- Gauss's theorem: closed surface → triple integral (outward normal is positive)
+
+### Infinite Series
+- Positive-term series: comparison → ratio → root → integral test
+- Alternating series: Leibniz test
+- Absolute vs. conditional convergence
+- Power series radius: \(\lim|a_n/a_{n+1}|\) or \(1/\lim\sqrt[n]{|a_n|}\)
+- Sum function: termwise integration/differentiation + known expansions
+- Fourier series: periodic extension, odd/even extension
+
+### Ordinary Differential Equations
+- Separable: separate → integrate
+- First-order linear: \(y'+P(x)y=Q(x)\), solution \(y=e^{-\int P}(\int Qe^{\int P}+C)\)
+- Bernoulli: \(y'+Py=Qy^n\), let \(z=y^{1-n}\)
+- Type identification: homogeneous → reducible order → undetermined coefficients (non-homogeneous linear) → variation of parameters
+- Second-order constant-coefficient: characteristic equation \(r^2+pr+q=0\), write general solution by root type
+- Particular solution for non-homogeneous: \(f(x)=P_n(x)e^{\alpha x}\) type → undetermined coefficients; general case → variation of parameters
+
+### Polynomials
+- Division algorithm, Euclidean algorithm for GCD
+- Rational root theorem: \(\frac{p}{q}\) where p|constant term, q|leading coefficient
+- Irreducibility: Eisenstein's criterion
+
+### Determinants
+- Cofactor expansion, triangularization, claw-type, bordering method
+- Vandermonde determinant
+- Recurrence: \(D_n = pD_{n-1} + qD_{n-2}\)
+
+### Matrices
+- Multiplication is non-commutative; \((AB)^T = B^T A^T\), \((AB)^{-1} = B^{-1}A^{-1}\)
+- Rank: elementary operations preserve rank; \(r(AB) \le \min(r(A), r(B))\)
+- Invertible ⇔ \(|A| \ne 0\) ⇔ \(r(A)=n\)
+
+### Systems of Linear Equations
+- Consistent ⇔ \(r(A)=r(A|b)\); unique solution ⇔ \(r=n\)
+- Fundamental system: set one free variable to 1, the rest to 0
+- General solution = particular solution + homogeneous solution
+
+### Vector Spaces & Linear Transformations
+- Basis, dimension, change of coordinates, transition matrix
+- Subspace intersection & sum, dimension formula
+- Matrix representation of a linear transformation: choose basis → compute image → expand in basis
+
+### Eigenvalues & Eigenvectors
+- Characteristic polynomial: \(|\lambda I - A| = 0\)
+- Diagonalizability: n linearly independent eigenvectors
+- Real symmetric matrices: real eigenvalues, orthogonal eigenvectors for distinct eigenvalues, always orthogonally diagonalizable
+
+### λ-Matrices & Jordan Canonical Form
+- Smith normal form → elementary divisors → Jordan blocks
+- Minimal polynomial: divides the characteristic polynomial; shares the same roots
+
+### Quadratic Forms
+- Write the symmetric matrix A → find eigenvalues for the canonical form
+- Positive definite ⇔ all eigenvalues positive ⇔ all leading principal minors positive
+- Completing the square vs. orthogonal transformation
+
+### Euclidean & Unitary Spaces
+- Inner product, norm, angle, orthogonality
+- Gram-Schmidt orthogonalization
+- Orthogonal complement, orthogonal projection
+
+## Image Processing
+
+1. Extract the problem text and key conditions from the image.
+2. If something is blurry or unclear: mark it as `[Uncertain: the image is unclear here, appears to be ...]`
+3. Ask the user about any unreadable symbols before solving.
+4. Do not describe the image layout, typography, colors, or appearance.
+
+### Transcription Confirmation (Preventing OCR Errors)
+
+After transcription, handle two cases:
+
+**Case A: No ambiguity** — All symbols are clear. Restate the full problem for user confirmation:
+
+```
+Transcribed problem:
+<full problem text, including all conditions and what to find>
+Please confirm the problem is correct. I'll start solving once you confirm.
+```
+
+Wait for confirmation ("yes", "correct", "looks good", "go ahead", etc.) before solving. If the user points out an error, correct the transcription and re-confirm.
+
+**Case B: Ambiguity present** — First flag uncertain parts per items 2 and 3, get clarification, then follow Case A (restate and confirm).
+
+> Rationale: OCR and visual recognition can introduce errors. A single round of confirmation before solving prevents wasting effort on the wrong problem.
