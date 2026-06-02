@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-skill-orange)](https://claude.ai/code)
 
+<p align="center"><b>Language / 语言:</b> <a href="README.md">English</a> | <a href="README.zh.md">简体中文</a></p>
+
 A specialized skill for **Claude Code** that solves college-level math problems — rigorously, with surgical output modes and no fluff.
 
 ---
@@ -103,5 +105,3 @@ claude-skill-math-solver/
 MIT — see [LICENSE](./LICENSE).
 
 ---
-
-> 中文版说明请看 [README.zh.md](./README.zh.md)。
