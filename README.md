@@ -55,6 +55,11 @@ Or just describe a math problem — the skill is auto-detected when relevant.
 - **Error-correction mode** — when the user shares their own work ("where did I go wrong?"), checks the existing process, pinpoints the first critical mistake, and continues from there — never redoes what's already correct
 - **Lightweight self-check** — before every final answer, the skill silently verifies method preconditions, sign correctness, edge cases, and completeness; only speaks up if something is worth flagging
 - **Proof method selection** — matches proof technique to the user's current learning stage, preferring earlier-chapter knowledge over later advanced tools (e.g., limit definition before Taylor series, elementary row operations before Jordan form)
+- **Language-follow** — output labels match the user's query language (Chinese 解/答 or English Solution/Answer)
+- **Answer-only mode** — when asked "just the answer", outputs only the final result with no derivation
+- **Exact value priority** — keeps fractions, radicals, π, e, ln 2 as symbols; approximates only when required
+- **Domain & condition checks** — silently verifies domain constraints (denominator, logarithm, radical, etc.) before every solution
+- **Concept discrimination** — answers "what's the difference" with intuitive counterexamples, not just formal definitions
 - **Exam-optimized** — defaults to the most common exam method; mentions alternatives briefly
 
 ## Example
