@@ -49,6 +49,9 @@ Or just describe a math problem — the skill is auto-detected when relevant.
 - **Verifies preconditions** — checks L'Hôpital conditions (0/0 or ∞/∞) before applying, etc.
 - **Surgical output** — never writes more than the mode calls for
 - **Image transcription + confirmation** — extracts problem text from images, flags ambiguous symbols, then restates the full problem for user confirmation before solving (prevents OCR errors from producing wrong answers)
+- **Error-checking mode** — when the user shares their own work ("where did I go wrong?"), checks the existing process, pinpoints the first critical mistake, and continues from there — never redoes what's already correct
+- **Lightweight self-check** — before every final answer, the skill silently verifies method preconditions, sign correctness, edge cases, and completeness; only speaks up if something is worth flagging
+- **Proof method selection** — matches proof technique to the user's current learning stage, preferring earlier-chapter knowledge over later advanced tools (e.g., limit definition before Taylor series, elementary row operations before Jordan form)
 - **Exam-optimized** — defaults to the most common exam method; mentions alternatives briefly
 
 ### Example
@@ -121,6 +124,9 @@ git clone https://github.com/qyh2007/claude-skill-math-solver.git \
 - **检查前提条件** — 洛必达前验证 0/0 或 ∞/∞，引定理先验条件
 - **输出克制** — 默认极简，追问才展开
 - **图片转写+确认** — 从图片提取题目，模糊处标注，然后复述完整题目请用户确认后再解题（防止 OCR 偏差导致答非所问）
+- **纠错模式** — 用户上传自己的过程时，优先检查已有步骤，指出第一个关键错误并从该处继续，不重复正确部分
+- **轻量自检** — 每次给答案前内部检查方法条件、符号、边界、完整性，只有值得提醒时才输出
+- **证明题阶段匹配** — 优先用当前章节知识，不轻易调后续高级工具（如能用极限定义就不用泰勒，能用初等变换就不用 Jordan 标准型）
 - **考试导向** — 默认给最常用的考试方法，可简短提替代思路
 
 ### 示例
