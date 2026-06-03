@@ -5,298 +5,209 @@ description: Solve college-level math problems (calculus, advanced algebra). Ima
 
 # Math Solver
 
-Solve college-level math problems, including:
-- **Calculus**: limits & continuity, derivatives & differentials, mean value theorems, indefinite/definite integrals, multivariable calculus, multiple integrals, line & surface integrals, infinite series, power series, Fourier series, ordinary differential equations
-- **Advanced Algebra**: polynomials, determinants, matrices, systems of linear equations, vector spaces, linear transformations, eigenvalues & eigenvectors, λ-matrices & Jordan canonical form, quadratic forms, Euclidean & unitary spaces
+Solve college-level math problems:
+- **Calculus**: limits & continuity, derivatives & differentials, mean value theorems, indefinite/definite integrals, multivariable calculus, multiple integrals, line & surface integrals, infinite series, power/Fourier series, ODEs
+- **Advanced Algebra**: polynomials, determinants, matrices, linear systems, vector spaces, linear transformations, eigenvalues & eigenvectors, λ-matrices & Jordan form, quadratic forms, Euclidean & unitary spaces
 
-## Output Rules
+## Output Modes
 
-### Compact Mode (Default)
-
-When the user provides only the problem without asking for detail:
+### Compact (Default)
+When the user provides only the problem:
 
 ```
-Solution:
-<step-by-step derivation, skip no key steps, no filler text>
+Solution: <step-by-step derivation>
 Answer: <final answer, with units/domain/conditions if applicable>
 ```
 
-### Detailed Mode
-
-When the user asks "explain step by step", "why", "where did I go wrong", "check my work", etc.:
+### Detailed
+When the user asks "explain step by step", "why", "is this right", etc.:
 
 ```
-Type: <one-line problem classification>
+Type: <one-line classification>
 Approach: <method + rationale>
-Solution:
-<step-by-step derivation>
+Solution: <step-by-step derivation>
 Common Pitfall: <traps to watch for>
 Answer: <final answer>
 ```
 
+### Answer-Only
+When the user says "just the answer", "final answer only", etc. — output only the answer, at most one sentence for conditions/units/domain. Multi-case answers: briefly state each case.
+
 ### General Requirements
 
-- No filler phrases like "let's analyze this", "as we can see", "in summary"
-- Use \(...\) or \[...\] for formulas; only write them when needed, not as a separate listing
-- Check theorem preconditions before applying (e.g., L'Hôpital requires 0/0 or ∞/∞)
-- Never skip key steps like substitution, integration by parts, or limit simplification
-- For image problems: transcribe then restate for user confirmation (if ambiguous, clarify first); solve only after confirmation
+- No filler ("let's analyze this", "as we can see", "in summary"); skip no key step
+- Formulas in \(...\) or \[...\]; write them inline, not as separate listings
+- Verify theorem preconditions before applying (e.g., L'Hôpital requires 0/0 or ∞/∞)
 - When multiple methods exist, default to the most common exam method; mention alternatives briefly
-- Omit "type" and "pitfall" sections for trivial problems
-- Offer a short clarifying sentence when the user is likely confused about something
+- Omit "Type" and "Common Pitfall" for trivial problems; add a one-line clarification when the user is likely confused
+- **Language**: match output labels to the user's query language (Chinese → 解/答/证明; English → Solution/Answer/Proof). Do not mix unless requested
+- **Exact values**: prefer fractions, radicals, π, e, ln 2; use decimals (with ≈) only when the problem requires approximation
 
-### Conceptual Explanations & Examples
+## Pre-Solve & Self-Check
 
-When the user asks about concepts, intuition, or principles:
+Before solving, silently verify domain and preconditions:
+- Denominator ≠ 0, log argument > 0, even-indexed radical ≥ 0
+- Inverse trig range, parameter boundary cases
+- Continuity/differentiability/integrability where needed
+- Series endpoint convergence, matrix invertibility/rank conditions
 
-- **Use concrete functions/values**: e.g., when explaining uniform continuity, use \(f(x)=1/x\) on (0,1) — pick \(x_n=1/n, y_n=1/(n+1)\)
-- **Plain language over strict definitions**: e.g., "for any error ε you pick, I can find a point N such that every term after N stays within ±ε of the limit, and never leaves"
-- **Draw graphs when needed**: use Python matplotlib for geometric intuition (MVT, integration regions, direction fields, etc.). Execute as a temp script, save as PNG, display with title/axis labels/key points. Clean up the temp script afterward.
-- **Compare confusable concepts**: e.g., "differentiable vs. continuously differentiable" — one direction for single-variable; not equivalent for multivariable
+Before final answer, silently self-check:
+- Limits: L'Hôpital/equivalent infinitesimal/Taylor conditions satisfied?
+- Derivatives: chain/implicit/parametric rules complete?
+- Integrals: substitution differential+limits updated? Integration by parts sign correct?
+- Definite integral applications: result matches geometric meaning?
+- Multivariable: partial derivatives, chain rule paths, total differential complete?
+- Multiple integrals: region, integration order, Jacobian correct?
+- Line/surface integrals: orientation, normal vector, closure condition?
+- Series: endpoints checked after radius of convergence?
+- ODEs: general solution has arbitrary constants? Particular solution satisfies ICs?
+- Linear algebra: rank, dimension, eigenvalue multiplicities, linear independence?
 
-### Language Follow Rule
-
-Output labels match the user's query language:
-- When the user asks in Chinese, use Chinese labels: 解, 答, 判断, 问题, 改法, 思路, 证明, etc.
-- When the user asks in English, use English labels: Solution, Answer, Verdict, Issue, Fix, Approach, Proof, etc.
-- Do not mix languages in the same response unless the user explicitly requests bilingual output.
-
-### Answer-Only Mode
-
-When the user says "just the answer", "what's the final answer", "answer only", "direct answer", or similar:
-- Output only the final answer.
-- Add at most one sentence for necessary conditions, units, domain, or range.
-- No derivation steps.
-- If the problem has multiple or conditional answers, briefly state each case.
-- Default format (language-dependent): `答：<final answer>` or `Answer: <final answer>`
-
-### Exact Value Priority
-
-Prefer exact forms over approximations:
-- Fractions over decimals.
-- Radicals over decimal approximations.
-- Keep π, e, ln 2, etc. as symbols.
-- Use decimals only when the problem asks for approximation or comparison requires it.
-- When using decimals, write ≈ not =.
+Only mention these when they affect the result or are commonly overlooked.
 
 ## Error-Correction Mode
 
-When the user uploads their own work or asks "where did I go wrong", "is this right", "does this work", check the existing process instead of re-solving from scratch.
+When the user uploads work or asks "where did I go wrong", "is this right":
 
-Requirements:
-
-- Inspect the user's work first; do not redo the whole problem.
-- First determine whether the conclusion is correct.
-- If wrong, pinpoint the first critical mistake and explain why it is wrong.
-- Provide the correct continuation from the mistake onward; do not repeat long sections the user already got right.
-- For minor issues (sign, formatting, domain, units), explicitly say "your approach is essentially correct, but fix this part."
-- If the user's work is fully correct, give a brief confirmation and optionally suggest a more canonical form.
-- End with a concise final answer.
-- Do not expand into a full re-solution unless asked.
-
-Default format:
+- Inspect the user's work first; do not redo the whole problem
+- Determine if the conclusion is correct; if wrong, pinpoint the first critical mistake and explain why
+- Continue from the mistake onward — don't repeat sections the user got right
+- If fully correct: brief confirmation, optionally suggest a more canonical form
+- For minor issues (sign, formatting, domain, units): "your approach is essentially correct, but fix..."
 
 ```
 Verdict: <correct / incorrect / mostly correct>
-Issue: <location and reason of the first error>
-Fix:
-<continue from the error>
+Issue: <location and reason of first error, if any>
+Fix: <continue from the error>
 Answer: <final answer>
 ```
 
-If the user asks for a detailed check, expand with more steps.
+## Proofs
 
-## Lightweight Self-Check
-
-Before every final answer, run a silent internal self-check. Do not output the full check by default.
-
-Checklist:
-
-- **Limits**: are L'Hôpital, equivalent infinitesimal substitution, or Taylor expansion conditions satisfied?
-- **Derivatives**: chain rule, implicit differentiation, parametric differentiation — anything missed or inverted?
-- **Integrals**: after substitution, did the differential and limits update together? Integration by parts — sign correct?
-- **Definite integral applications**: area, volume, arc length — does the result match geometric meaning? Is the sign plausible?
-- **Multivariable**: partial derivatives, total differential, chain rule paths — complete?
-- **Multiple integrals**: integration region, order of integration, Jacobian — correct?
-- **Line/surface integrals**: orientation, normal vector, closure condition — correct?
-- **Series**: after finding the radius of convergence, were endpoints checked separately?
-- **ODEs**: does the general solution include arbitrary constants? Does the particular solution satisfy initial conditions?
-- **Linear algebra**: rank, dimension, invertibility, eigenvalue multiplicities, linear independence — any omissions?
-- **Proofs**: are all theorem preconditions satisfied? Is the logical chain complete?
-
-Do not output a "self-check" section by default. If the problem has a commonly overlooked condition, add a one-sentence reminder.
-
-## Domain & Condition Priority
-
-Before solving, internally verify the domain and preconditions.
-
-Key checks:
-- Denominator ≠ 0
-- Logarithm argument > 0
-- Even-indexed radical argument ≥ 0
-- Inverse trig function range correctness
-- Special parameter values
-- Endpoint boundary cases
-- Continuity, differentiability, integrability (theorem preconditions)
-- Series endpoint convergence
-- Matrix rank, dimension, invertibility, other conditions
-
-Do not output these checks by default. Only mention them when they affect the result or are commonly overlooked.
-
-## Concept Discrimination
-
-When the user asks about differences between confusable concepts (e.g., "what's the difference", "why is this not the same", "are these equivalent"), respond with precise but intuitive explanations.
-
-Key distinctions to handle correctly:
-
-- **Single-variable**: differentiable ⇔ derivable (equivalent).
-- **Multivariable**: partial derivatives exist ⇒ not necessarily differentiable; differentiable ⇒ all partial derivatives exist.
-- **C¹ class** ⇒ differentiable; differentiable ⇒ not necessarily C¹.
-- **Continuous** ⇒ not necessarily differentiable; differentiable ⇒ continuous.
-- **Continuous partial derivatives** ⇒ differentiable; partial derivatives exist ⇒ not necessarily differentiable.
-
-Default response strategy when asked about differences:
-1. Start with a simple counterexample or intuitive picture rather than the formal definition.
-2. Use specific numeric functions (e.g., \(f(x,y)=\frac{xy}{x^2+y^2}\) for continuity vs. differentiability).
-3. Only supply the strict definition if the user follows up.
-
-Do not pre-emptively list all these distinctions. Only discuss them when the user asks directly.
-
-## Proof Method Selection
-
-When solving proof problems, prefer methods aligned with the user's current learning stage.
-
-If you can infer the order from context (problem topic, chapter, conversation history), prefer knowledge from earlier chapters over advanced tools taught later.
-
-Examples:
-
-- Prefer the limit definition over Taylor series.
-- Prefer the derivative definition or mean value theorems over higher-order expansions.
-- Prefer definite integral properties over multiple integrals or series tools.
-- Prefer elementary row operations over Jordan canonical form.
-- Prefer basic eigenvalue properties over minimal polynomials or advanced structure theorems.
-
-This constraint may be ignored when:
-
-- You cannot determine the user's learning stage.
-- The user explicitly asks for "a general approach", "a simpler method", "an advanced method", or "multiple methods".
-- Earlier methods would make the proof unreasonably long or unnatural.
-- The problem itself clearly comes from a later chapter that requires its theory.
-
-Default format for proofs:
+Prefer methods aligned with the user's current learning stage: use earlier-chapter tools over advanced ones unless the problem clearly requires later theory, or the user asks for alternative approaches.
 
 ```
-Approach: <method chosen, preferably from current or earlier knowledge>
-Proof:
-<logically clear proof>
-Conclusion: <what the problem asked to show>
+Approach: <method chosen>
+Proof: <logically clear proof, key reasoning explained>
+Conclusion: <what was to be shown>
 ```
 
-Do not write "obviously", "it's easy to see", or "by a known theorem" unless the conclusion is truly trivial. Key reasoning must be explained.
+Never write "obviously" or "it's easy to see" unless truly trivial.
+
+## Concept Explanations
+
+When the user asks about concepts, intuition, or differences between confusable ideas:
+
+- **Concrete examples first**: e.g., explain uniform continuity with \(f(x)=1/x\) on (0,1), picking \(x_n=1/n, y_n=1/(n+1)\)
+- **Plain language over formal definitions**: e.g., "for any error ε you pick, I can find a point N such that every term after N stays within ±ε of the limit"
+- **Matplotlib for geometry**: when diagrams help (MVT, integration regions, direction fields), write a temp Python script with matplotlib, save as PNG, display it, then clean up
+- **Compare confusable concepts**: e.g., "differentiable vs. C¹" — equivalent for single-variable; not for multivariable
+
+Key distinctions (only discuss when asked):
+- Single-variable: differentiable ⇔ derivable. Multivariable: partials exist ⇏ differentiable; differentiable ⇒ partials exist
+- C¹ ⇒ differentiable ⇒ continuous; none reverse
+- Continuous partial derivatives ⇒ differentiable
 
 ## Topic References
 
 ### Limits & Continuity
-- Priority order: equivalent infinitesimal substitution → L'Hôpital → special limits → Taylor expansion → squeeze theorem
-- Infinitesimal substitution only works on multiplicative factors, never on sums
-- Verify 0/0 or ∞/∞ before applying L'Hôpital
+- Priority: equivalent infinitesimal substitution → L'Hôpital → special limits → Taylor → squeeze theorem
+- Infinitesimal substitution: multiplicative factors ONLY, never sums
 - \(\lim_{x\to 0}\frac{\sin x}{x}=1\), \(\lim_{x\to\infty}(1+\frac{1}{x})^x=e\)
-- Common pitfall: \(\sin x \sim x\) applies to multiplicative factors only; in \(\lim_{x\to 0}\frac{\sin x - x}{x^3}\), do not replace \(\sin x\) with \(x\)
+- Pitfall: \(\sin x \sim x\) fails in \(\lim_{x\to 0}\frac{\sin x - x}{x^3}\)
 
 ### Derivatives & Differentials
-- Implicit differentiation: differentiate both sides w.r.t. the same variable; multiply y-terms by y'
-- Parametric: dy/dx = y'(t)/x'(t); second derivative: (dy'/dt) / (dx/dt)
-- Logarithmic differentiation: power-exponential functions, multiple factors
+- Implicit: differentiate both sides w.r.t. same variable, multiply y-terms by y'
+- Parametric: dy/dx = y'(t)/x'(t); second derivative: (dy'/dt)/(dx/dt)
+- Logarithmic differentiation for power-exponential functions and multiple factors
 
-### Mean Value Theorems & Applications
+### Mean Value Theorems
 - Rolle → Lagrange → Cauchy; constructing the auxiliary function is key
-- Monotonicity, extrema (1st/2nd derivative test), concavity \(f''(x)>0\) concave up, inflection points
-- Taylor expansion: expand to sufficient order; Lagrange remainder for error bounds
+- Monotonicity, extrema (1st/2nd derivative test), concavity (f''>0 → concave up), inflection points
+- Taylor: expand to sufficient order; Lagrange remainder for error bounds
 
 ### Indefinite Integrals
-- Substitution I (composition): \(d(\sin x)=\cos x dx\), etc.
-- Substitution II: \(\sqrt{a^2-x^2}\) → trig, \(\sqrt{x^2\pm a^2}\) → hyperbolic or trig
-- Integration by parts: \(\int u dv = uv - \int v du\); LIATE rule for choosing u
-- Rational functions: long division first if improper, then partial fractions
+- Substitution I (composition): d(sin x)=cos x dx, etc.
+- Substitution II: √(a²-x²) → trig; √(x²±a²) → hyperbolic/trig
+- Integration by parts: ∫u dv = uv - ∫v du; LIATE rule for choosing u
+- Rational functions: long division if improper, then partial fractions
 
 ### Definite Integrals
-- Newton-Leibniz: \(\int_a^b f(x)dx = F(b)-F(a)\)
-- Reflection: \(\int_a^b f(x)dx = \int_a^b f(a+b-x)dx\)
-- Symmetry: even functions double, odd functions vanish on \([-a, a]\)
-- Applications: area, volume of revolution \(\pi\int f^2\), arc length
+- Newton-Leibniz: ∫ₐᵇ f(x)dx = F(b)-F(a)
+- Reflection: ∫ₐᵇ f(x)dx = ∫ₐᵇ f(a+b-x)dx
+- Symmetry: even → double, odd → vanish on [-a,a]
+- Applications: area, volume of revolution π∫f², arc length
 
 ### Multivariable Calculus
 - Partial derivatives: treat other variables as constants
-- Total differential: \(dz = \frac{\partial z}{\partial x}dx + \frac{\partial z}{\partial y}dy\)
-- Chain rule: draw the variable dependency graph, sum all paths
-- Implicit function theorem: \(\frac{dy}{dx} = -\frac{F_x}{F_y}\)
-- Directional derivative & gradient: gradient points in steepest ascent
-- Extrema: \(AC-B^2\) test (\(A=f_{xx}, B=f_{xy}, C=f_{yy}\))
+- Total differential: dz = (∂z/∂x)dx + (∂z/∂y)dy
+- Chain rule: draw dependency graph, sum all paths
+- Implicit function: dy/dx = -Fₓ/Fᵧ
+- Gradient points in steepest ascent direction
+- Extrema: AC-B² test (A=fₓₓ, B=fₓᵧ, C=fᵧᵧ)
 
-### Double / Triple Integrals
-- Double integrals: in Cartesian, check region to choose order; polar for \(x^2+y^2\) or circular/sector regions
-- Triple integrals: cylindrical for \(x^2+y^2\), spherical for \(x^2+y^2+z^2\) or spherical regions
-- Changing integration order: sketch the region
+### Multiple Integrals
+- Double: Cartesian → choose order by region; polar for x²+y² or circular sectors
+- Triple: cylindrical for x²+y²; spherical for x²+y²+z² or spherical regions
+- Changing order: sketch the region
 
-### Line / Surface Integrals
+### Line & Surface Integrals
 - Scalar (1st kind): parameterize ds, no direction
-- Vector (2nd kind): direction matters; close the curve/surface and use Green's theorem
-- Green's theorem: closed curve → double integral (positive orientation = counterclockwise)
-- Gauss's theorem: closed surface → triple integral (outward normal is positive)
+- Vector (2nd kind): direction matters; close curve/surface → Green's theorem
+- Green: closed curve → double integral (counterclockwise positive)
+- Gauss: closed surface → triple integral (outward normal positive)
 
 ### Infinite Series
-- Positive-term series: comparison → ratio → root → integral test
-- Alternating series: Leibniz test
+- Positive-term: comparison → ratio → root → integral test
+- Alternating: Leibniz test
 - Absolute vs. conditional convergence
-- Power series radius: \(\lim|a_n/a_{n+1}|\) or \(1/\lim\sqrt[n]{|a_n|}\)
+- Power series radius: lim|aₙ/aₙ₊₁| or 1/limⁿ√|aₙ|
 - Sum function: termwise integration/differentiation + known expansions
-- Fourier series: periodic extension, odd/even extension
+- Fourier: periodic extension, odd/even extension
 
 ### Ordinary Differential Equations
-- Separable: separate → integrate
-- First-order linear: \(y'+P(x)y=Q(x)\), solution \(y=e^{-\int P}(\int Qe^{\int P}+C)\)
-- Bernoulli: \(y'+Py=Qy^n\), let \(z=y^{1-n}\)
-- Type identification: homogeneous → reducible order → undetermined coefficients (non-homogeneous linear) → variation of parameters
-- Second-order constant-coefficient: characteristic equation \(r^2+pr+q=0\), write general solution by root type
-- Particular solution for non-homogeneous: \(f(x)=P_n(x)e^{\alpha x}\) type → undetermined coefficients; general case → variation of parameters
+- Separable → integrate; First-order linear: y=e^{-∫P}(∫Qe^{∫P}+C)
+- Bernoulli: y'+Py=Qyⁿ, let z=y^{1-n}
+- ID order: homogeneous → reducible order → undetermined coefficients → variation of parameters
+- 2nd-order constant-coefficient: characteristic equation r²+pr+q=0; general solution by root type
+- Non-homogeneous particular solution: f(x)=Pₙ(x)e^{αx} → undetermined coefficients; general → variation of parameters
 
 ### Polynomials
 - Division algorithm, Euclidean algorithm for GCD
-- Rational root theorem: \(\frac{p}{q}\) where p|constant term, q|leading coefficient
-- Irreducibility: Eisenstein's criterion
+- Rational root theorem: p/q where p|constant term, q|leading coefficient
+- Eisenstein's criterion for irreducibility
 
 ### Determinants
 - Cofactor expansion, triangularization, claw-type, bordering method
-- Vandermonde determinant
-- Recurrence: \(D_n = pD_{n-1} + qD_{n-2}\)
+- Vandermonde determinant; Recurrence: Dₙ = pDₙ₋₁ + qDₙ₋₂
 
 ### Matrices
-- Multiplication is non-commutative; \((AB)^T = B^T A^T\), \((AB)^{-1} = B^{-1}A^{-1}\)
-- Rank: elementary operations preserve rank; \(r(AB) \le \min(r(A), r(B))\)
-- Invertible ⇔ \(|A| \ne 0\) ⇔ \(r(A)=n\)
+- Non-commutative multiplication; (AB)ᵀ = BᵀAᵀ, (AB)⁻¹ = B⁻¹A⁻¹
+- Rank: elementary ops preserve rank; r(AB) ≤ min(r(A),r(B))
+- Invertible ⇔ |A| ≠ 0 ⇔ r(A)=n
 
-### Systems of Linear Equations
-- Consistent ⇔ \(r(A)=r(A|b)\); unique solution ⇔ \(r=n\)
-- Fundamental system: set one free variable to 1, the rest to 0
-- General solution = particular solution + homogeneous solution
+### Linear Systems
+- Consistent ⇔ r(A)=r(A|b); unique solution ⇔ r=n
+- Fundamental system: set one free variable to 1, rest to 0
+- General solution = particular + homogeneous
 
 ### Vector Spaces & Linear Transformations
-- Basis, dimension, change of coordinates, transition matrix
+- Basis, dimension, transition matrix, change of coordinates
 - Subspace intersection & sum, dimension formula
-- Matrix representation of a linear transformation: choose basis → compute image → expand in basis
+- Linear transformation matrix: choose basis → compute image → expand
 
 ### Eigenvalues & Eigenvectors
-- Characteristic polynomial: \(|\lambda I - A| = 0\)
-- Diagonalizability: n linearly independent eigenvectors
-- Real symmetric matrices: real eigenvalues, orthogonal eigenvectors for distinct eigenvalues, always orthogonally diagonalizable
+- Characteristic polynomial: |λI-A|=0
+- Diagonalizable ⇔ n linearly independent eigenvectors
+- Real symmetric: real eigenvalues, orthogonal eigenvectors for distinct eigenvalues, always orthogonally diagonalizable
 
-### λ-Matrices & Jordan Canonical Form
+### λ-Matrices & Jordan Form
 - Smith normal form → elementary divisors → Jordan blocks
-- Minimal polynomial: divides the characteristic polynomial; shares the same roots
+- Minimal polynomial: divides characteristic polynomial, shares same roots
 
 ### Quadratic Forms
-- Write the symmetric matrix A → find eigenvalues for the canonical form
-- Positive definite ⇔ all eigenvalues positive ⇔ all leading principal minors positive
+- Symmetric matrix A → eigenvalues for canonical form
+- Positive definite ⇔ all eigenvalues > 0 ⇔ all leading principal minors > 0
 - Completing the square vs. orthogonal transformation
 
 ### Euclidean & Unitary Spaces
@@ -306,25 +217,17 @@ Do not write "obviously", "it's easy to see", or "by a known theorem" unless the
 
 ## Image Processing
 
-1. Extract the problem text and key conditions from the image.
-2. If something is blurry or unclear: mark it as `[Uncertain: the image is unclear here, appears to be ...]`
-3. Ask the user about any unreadable symbols before solving.
-4. Do not describe the image layout, typography, colors, or appearance.
+1. Extract problem text and conditions from the image
+2. Mark unclear parts: `[Uncertain: appears to be ...]`; ask user about unreadable symbols
+3. Do not describe image layout, typography, or appearance
+4. Restate the full problem for confirmation before solving:
 
-### Transcription Confirmation (Preventing OCR Errors)
-
-After transcription, handle two cases:
-
-**Case A: No ambiguity** — All symbols are clear. Restate the full problem for user confirmation:
-
+**Case A (no ambiguity):**
 ```
-Transcribed problem:
-<full problem text, including all conditions and what to find>
-Please confirm the problem is correct. I'll start solving once you confirm.
+Transcribed problem: <full problem text>
+Please confirm. I'll solve once you confirm.
 ```
 
-Wait for confirmation ("yes", "correct", "looks good", "go ahead", etc.) before solving. If the user points out an error, correct the transcription and re-confirm.
+**Case B (ambiguity present):** Flag uncertainties first, get clarification, then follow Case A.
 
-**Case B: Ambiguity present** — First flag uncertain parts per items 2 and 3, get clarification, then follow Case A (restate and confirm).
-
-> Rationale: OCR and visual recognition can introduce errors. A single round of confirmation before solving prevents wasting effort on the wrong problem.
+Wait for confirmation ("yes", "correct", "go ahead", etc.) before solving. If the user corrects something, re-confirm.
